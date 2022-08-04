@@ -1,0 +1,3 @@
+export const CHANGE_PLAY_LIST = 'CHANGE_PLAY_LIST'
+export const DELETE_SONG = 'DELETE_SONG'
+export const DELETE_ALL_SONG = 'DELETE_ALL_SONG'
