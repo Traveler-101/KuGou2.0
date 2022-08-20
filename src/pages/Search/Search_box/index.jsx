@@ -1,45 +1,52 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useRef, useState } from "react";
+import { useMemo } from "react";
+import { Wrapper } from "./style";
+import { debounce } from "@/api/utils";
+import { useEffect } from "react";
 
-const Wrapper = styled.div`
-  .search-box {
-    padding: 0.5rem;
-    background: #fbfbfb;
-    position: absolute;
-    width: 100%;
-    .fa-search {
-        position: absolute;
-        left: 1.2rem;
-        top: 1.1rem;
-        
-    }
-    .fa-close {
-        position: absolute;
-        top: 1.1rem;
-        left: 13rem;
-    }
-    input {
-        padding: 0.5rem 1.5rem;
-        border-radius: 0.5rem;
-        border: 1px solid #e5e5e5;
-        width: 80%;
-    }
-    .submit {
-        width: 20%;
-    }
-  }
+const SearchBox = (props) => {
+  const queryRef = useRef(null);
+  const [query, setQuery] = useState('');
+  const { newQuery } = props;
+  const { handleQuery } = props;
+  let handleQueryDebounce = useMemo(() => {
+    return debounce(handleQuery, 500)
+  }, [handleQuery]);
   
-`;
-const SearchBox = () => {
+  useEffect(() => {
+    queryRef.current.focus();
+  }, [])
+  useEffect(() => {
+    handleQueryDebounce(query);
+  }, [query])
+  useEffect(() => {
+    let curQuery = query;
+    if(newQuery !== query){
+      curQuery = newQuery;
+      queryRef.current.value = newQuery;
+    }
+    setQuery(curQuery);
+    // eslint-disable-next-line
+  }, [newQuery]);
+  const handleChange = (e) => {
+    console.log(e)
+    let val = e.target.value
+    // console.log(val)
+    setQuery(val)
+  }
+  const clearQuery = () => {
+    setQuery('');
+    queryRef.current.value = '';
+    queryRef.current.focus();
+  }
+  const displayStyle = query ? {display: 'block'}: {display: 'none'};
   return (
     <Wrapper>
       <div className="search-box">
         <i className="fa fa-search"></i>
-        <input type="text" placeholder="请输入搜索内容" />
-        <i className="fa fa-close"></i>
-        
+        <input ref={queryRef} placeholder="音乐/歌手/拼音" onChange={handleChange} />
+        <i className="fa fa-close" style={displayStyle} onClick={clearQuery}></i> 
       </div>
-      
     </Wrapper>
   );
 };
