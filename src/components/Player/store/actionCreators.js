@@ -20,7 +20,7 @@ export const getPlayList = () => {
     return dispatch => {
         getPlayRequest()
             .then(data => {               
-                dispatch(changePlayList(data))
+                dispatch(changePlayList(data.data))
             })
     }
 }
