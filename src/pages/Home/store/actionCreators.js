@@ -39,7 +39,7 @@ export const getRecommendList = () => {
                 if (!data.length) {
                     data = []
                 }
-                const action = changeRecommendList(data)
+                const action = changeRecommendList(data.data)
                 dispatch(action)
                 dispatch(changeEnterLoading(false))
             })
